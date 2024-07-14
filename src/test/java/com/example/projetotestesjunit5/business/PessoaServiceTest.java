@@ -21,28 +21,33 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class) //para rodar os testes com o mockito
 public class PessoaServiceTest {
 
     @InjectMocks
     PessoaService service;
 
-    @Mock
+    @Mock //cria um mock do repository, mock serve para simular o comportamento de um objeto
     PessoaRepository repository;
 
     Pessoa pessoa;
 
+    //mockando pessoa para ser usada antes de cada teste
     @BeforeEach
     public void setUp() {
         pessoa = new Pessoa("Angelica", "12358569852", "Desenvolvedora", 30, "Sao Paulo", "Rua das Cruzes", 54);
     }
 
+    //Annotation @Test da JUNIT.JUPITER e não apenas JUNIT
     @Test
     void deveBuscarPessoasPorCPFComSucesso() {
+        //cenário
         when(repository.findPessoa(pessoa.getCpf())).thenReturn(Collections.singletonList(pessoa));
 
+        //execução
         List<Pessoa> pessoas = service.buscaPessoasPorCpf(pessoa.getCpf());
 
+        //verificação
         assertEquals(Collections.singletonList(pessoa), pessoas);
         verify(repository).findPessoa(pessoa.getCpf());
         verifyNoMoreInteractions(repository);
@@ -55,10 +60,15 @@ public class PessoaServiceTest {
             service.buscaPessoasPorCpf(null);
         });
 
+        //verificando se a exceção foi lançada
         assertThat(e, notNullValue());
+        //verificando a mensagem da exceção
         assertThat(e.getMessage(), is("Erro ao buscar pessoas por cpf = null"));
+        //verificando se a causa da exceção é uma IllegalArgumentException
         assertThat(e.getCause(), notNullValue());
+        //verificando a mensagem da causa da exceção
         assertThat(e.getCause().getMessage(), is("Cpf é obrigatório!"));
+        //verifica se não houve interação com o repository
         verifyNoInteractions(repository);
 
     }
@@ -71,10 +81,15 @@ public class PessoaServiceTest {
             service.buscaPessoasPorCpf(pessoa.getCpf());
         });
 
+        //verificando se a exceção foi lançada
         assertThat(e.getMessage(), is(format("Erro ao buscar pessoas por cpf = %s", pessoa.getCpf())));
+        //verificando se a causa da exceção é uma RuntimeException
         assertThat(e.getCause().getClass(), is(RuntimeException.class));
-        assertThat(e.getCause().getMessage(), is("Falha ao buscar pessoas por cpf!"));
+        //verificando a mensagem da causa da exceção
+        assertThat(e.getCause().getMessage(), is("Falha ao buscar pessoas por cpf!" ));
+        //verifica se houve interação com o repository
         verify(repository).findPessoa(pessoa.getCpf());
+        //verifica se não houve mais interações com o repository
         verifyNoMoreInteractions(repository);
 
     }

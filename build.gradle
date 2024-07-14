@@ -30,6 +30,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
 
+
+    //dependencias importantes para o teste
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.junit.jupiter:junit-jupiter-migrationsupport:5.9.2'
 }

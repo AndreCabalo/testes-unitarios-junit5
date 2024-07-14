@@ -27,6 +27,7 @@ public class PessoaService {
 
             return repository.findPessoa(cpf);
         } catch (final Exception e) {
+            // %s significa que é uma string
             throw new BusinessException(format("Erro ao buscar pessoas por cpf = %s", cpf), e);
         }
 
